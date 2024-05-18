@@ -16,7 +16,7 @@ const morgan = require("morgan");
 const salt = bcrypt.genSaltSync(10);
 const secret = process.env.JWT_SECRET;
 
-app.use(morgan("combined"));
+app.use(morgan("dev"));
 app.use(
   cors({
     origin: process.env.CORS_ORIGIN, // or the specific origin you want to allow
@@ -33,6 +33,10 @@ app.use("/uploads", express.static(__dirname + "/uploads"));
 mongoose.set("strictQuery", false);
 mongoose.connect(process.env.MONGODB_URI, () => {
   console.log("Connected to MongoDB");
+});
+
+app.get("/health", (req, res) => {
+  res.status(200).send("Server is running");
 });
 
 app.post("/register", async (req, res) => {
