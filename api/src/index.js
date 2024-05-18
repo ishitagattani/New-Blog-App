@@ -11,23 +11,20 @@ const cookieParser = require("cookie-parser");
 const multer = require("multer");
 const uploadMiddleware = multer({ dest: "uploads/" });
 const fs = require("fs");
+const morgan = require("morgan");
 
 const salt = bcrypt.genSaltSync(10);
 const secret = process.env.JWT_SECRET;
 
-// const corsOrigin = process.env.CORS_ORIGIN;
-// app.use(cors({ credentials: true, origin: corsOrigin }));
-// CORS: allow all
-app.use(function (req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, OPTIONS"
-  );
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-  res.setHeader("Access-Control-Allow-Credentials", true);
-  next();
-});
+app.use(morgan("combined"));
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN, // or the specific origin you want to allow
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type"],
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 app.use(cookieParser());
